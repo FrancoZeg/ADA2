@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// Función para resolver el problema de la mochila usando programación dinámica
+int knapsack(const vector<int>& weights, const vector<int>& values, int capacity) {
+    int n = weights.size();
+    
+    // Crear una tabla dp donde dp[i][w] guarda el valor máximo que se puede obtener
+    // con los primeros i elementos y una capacidad w
+    vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));
+
+    // Rellenar la tabla dp
+    for (int i = 1; i <= n; i++) {
+        for (int w = 0; w <= capacity; w++) {
+            if (weights[i - 1] <= w) {
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - weights[i - 1]] + values[i - 1]);
+            } else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+    
+    // El valor máximo que se puede obtener está en dp[n][capacity]
+    return dp[n][capacity];
+}
+
+int main() {
+    // Ejemplo de uso:
+    vector<int> weights = {2, 3, 4, 5};
+    vector<int> values = {3, 4, 5, 6};
+    int capacity = 5;
+    
+    cout << "Valor máximo en la mochila: " << knapsack(weights, values, capacity) << endl;
+
+    return 0;
+}
